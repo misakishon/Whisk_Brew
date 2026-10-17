@@ -18,7 +18,7 @@ interface FeaturedItem {
     name: string;
     category: string;
     description: string;
-    price: string;
+    price: number;
     tag: string;
     imageUrl: string;
 }
@@ -30,65 +30,71 @@ interface FeatureHighlight {
     detail: string;
 }
 
-const categories = ["All", "Slow Brew", "Whisked Matcha", "Artisanal Pastry"];
+const categories = [
+    "All",
+    "Artisanal Matcha",
+    "Espresso & Pour Over",
+    "Signature Cold Brews",
+    "Pastries & Artisanal Bakes",
+];
 
 const featuredItems: FeaturedItem[] = [
     {
         id: 1,
-        name: "Honey Oat Flat White",
-        category: "Slow Brew",
-        description: "Double espresso, local honey, silky oat milk.",
-        price: "$5.50",
+        name: "Uji Usucha",
+        category: "Artisanal Matcha",
+        description: "Sweet grass, toasted almond, clean umami finish.",
+        price: 175,
         tag: "House favorite",
         imageUrl:
-            "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=900&q=85",
+            "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=900&q=85",
     },
     {
         id: 2,
-        name: "Uji Cloud Matcha",
-        category: "Whisked Matcha",
-        description: "Stone-ground Uji matcha, whisked to order.",
-        price: "$6.00",
+        name: "Uji Ceremonial Matcha Latte",
+        category: "Artisanal Matcha",
+        description: "First-harvest Uji leaf, velvety microfoam.",
+        price: 185,
         tag: "Ceremonial grade",
         imageUrl:
             "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=900&q=85",
     },
     {
         id: 3,
-        name: "Brown Butter Croissant",
-        category: "Artisanal Pastry",
-        description: "Slow-laminated, baked fresh every morning.",
-        price: "$4.75",
+        name: "Black Sesame Matcha Kouign-Amann",
+        category: "Pastries & Artisanal Bakes",
+        description: "Caramelized pastry, black sesame, matcha custard.",
+        price: 160,
         tag: "Baked daily",
         imageUrl:
             "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=900&q=85",
     },
     {
         id: 4,
-        name: "Ethiopia Pour Over",
-        category: "Slow Brew",
-        description: "Bergamot, stone fruit, and a honeyed finish.",
-        price: "$6.50",
+        name: "V60 Hand Pour Over",
+        category: "Espresso & Pour Over",
+        description: "Jasmine, bergamot, honeyed stone fruit.",
+        price: 170,
         tag: "Single origin",
         imageUrl:
             "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=900&q=85",
     },
     {
         id: 5,
-        name: "Strawberry Matcha",
-        category: "Whisked Matcha",
-        description: "Bright Uji matcha layered over ripe berries.",
-        price: "$6.75",
+        name: "Yuzu Blossom Cold Brew Tonic",
+        category: "Signature Cold Brews",
+        description: "Slow-steeped coffee, Japanese yuzu, botanical tonic.",
+        price: 190,
         tag: "Seasonal",
         imageUrl:
             "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=900&q=85",
     },
     {
         id: 6,
-        name: "Rosemary Morning Bun",
-        category: "Artisanal Pastry",
-        description: "Citrus sugar, flaky layers, a little rosemary.",
-        price: "$5.00",
+        name: "Brown Butter Cardamom Bun",
+        category: "Pastries & Artisanal Bakes",
+        description: "Brioche, freshly ground cardamom, pearl sugar.",
+        price: 145,
         tag: "Small batch",
         imageUrl:
             "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=85",
@@ -114,6 +120,9 @@ const philosophy: FeatureHighlight[] = [
     },
 ];
 
+const peso = (amount: number) =>
+    `₱${amount.toLocaleString("en-PH", { maximumFractionDigits: 0 })}`;
+
 export default function Home() {
     const [activeCategory, setActiveCategory] = useState("All");
     const [cart, setCart] = useState<Record<number, number>>({});
@@ -132,8 +141,7 @@ export default function Home() {
         .filter((item) => item.quantity > 0);
     const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
     const subtotal = cartItems.reduce(
-        (total, item) =>
-            total + Number.parseFloat(item.price.replace("$", "")) * item.quantity,
+        (total, item) => total + item.price * item.quantity,
         0,
     );
 
@@ -316,7 +324,7 @@ export default function Home() {
                                             {cartCount} {cartCount === 1 ? "item" : "items"}
                                         </span>
                                         <span className="font-medium">
-                                            ${subtotal.toFixed(2)}
+                                            {peso(subtotal)}
                                         </span>
                                     </div>
                                     <p className="mt-1 text-xs text-[#78716C]">
@@ -441,12 +449,7 @@ export default function Home() {
                                                         {item.name}
                                                     </h3>
                                                     <span className="shrink-0 text-sm font-medium">
-                                                        $
-                                                        {(
-                                                            Number.parseFloat(
-                                                                item.price.replace("$", ""),
-                                                            ) * item.quantity
-                                                        ).toFixed(2)}
+                                                        {peso(item.price * item.quantity)}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-3">
@@ -490,7 +493,7 @@ export default function Home() {
                                     <div className="flex justify-between text-sm">
                                         <span className="text-[#78716C]">Subtotal</span>
                                         <span className="font-medium">
-                                            ${subtotal.toFixed(2)}
+                                            {peso(subtotal)}
                                         </span>
                                     </div>
                                     <p className="mt-1 text-xs text-[#78716C]">
@@ -648,7 +651,7 @@ export default function Home() {
                                             {item.name}
                                         </h3>
                                         <span className="shrink-0 text-sm font-medium">
-                                            {item.price}
+                                            {peso(item.price)}
                                         </span>
                                     </div>
                                     <p className="mt-1 truncate text-sm text-[#78716C]">
