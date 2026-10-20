@@ -6,6 +6,10 @@
     color-scheme: light;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 html,
 body,
 #app {
@@ -15,4 +19,6 @@ body,
 
 body {
     margin: 0;
+    background-color: #FAF8F5;
+    color: #1C1917;
 }

@@ -13,7 +13,16 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['"DM Sans"', 'Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
+                serif: ['"Cormorant Garamond"', '"DM Serif Display"', ...defaultTheme.fontFamily.serif],
+            },
+            colors: {
+                ivory: '#F8F5F0',
+                nearblack: '#1C1917',
+                warmgray: '#78716C',
+                coffeebrown: '#955B3D',
+                sage: '#E3EAE3',
+                forestgreen: '#102B24',
             },
         },
     },

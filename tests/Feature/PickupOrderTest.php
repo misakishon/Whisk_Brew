@@ -76,4 +76,84 @@ class PickupOrderTest extends TestCase
 
         $this->assertDatabaseCount('pickup_orders', 0);
     }
+
+    public function test_home_featured_items_can_be_ordered_successfully(): void
+    {
+        $response = $this->post('/orders', [
+            'customer_name' => 'Storefront Fan',
+            'email' => 'fan@example.com',
+            'pickup_in_minutes' => 30,
+            'items' => [
+                [
+                    'menu_item_id' => 1,
+                    'quantity' => 1,
+                    'customization' => [
+                        'temperature' => 'Hot',
+                        'milk' => 'Whole Dairy',
+                        'sweetness' => '100%',
+                        'upgrade' => 'None',
+                    ],
+                ],
+                [
+                    'menu_item_id' => 2,
+                    'quantity' => 1,
+                    'customization' => [
+                        'temperature' => 'Hot',
+                        'milk' => 'Whole Dairy',
+                        'sweetness' => '100%',
+                        'upgrade' => 'None',
+                    ],
+                ],
+                [
+                    'menu_item_id' => 6,
+                    'quantity' => 1,
+                    'customization' => [
+                        'temperature' => 'Hot',
+                        'milk' => 'Whole Dairy',
+                        'sweetness' => '100%',
+                        'upgrade' => 'None',
+                    ],
+                ],
+                [
+                    'menu_item_id' => 8,
+                    'quantity' => 1,
+                    'customization' => [
+                        'temperature' => 'Iced',
+                        'milk' => 'Whole Dairy',
+                        'sweetness' => '100%',
+                        'upgrade' => 'None',
+                    ],
+                ],
+                [
+                    'menu_item_id' => 11,
+                    'quantity' => 2,
+                    'customization' => [
+                        'temperature' => 'Hot',
+                        'milk' => 'Whole Dairy',
+                        'sweetness' => '100%',
+                        'upgrade' => 'None',
+                    ],
+                ],
+                [
+                    'menu_item_id' => 12,
+                    'quantity' => 1,
+                    'customization' => [
+                        'temperature' => 'Hot',
+                        'milk' => 'Whole Dairy',
+                        'sweetness' => '100%',
+                        'upgrade' => 'None',
+                    ],
+                ],
+            ],
+        ]);
+
+        $response->assertRedirect(route('menu'));
+        $this->assertDatabaseCount('pickup_orders', 1);
+
+        $order = PickupOrder::with('items')->first();
+        $this->assertSame('Storefront Fan', $order->customer_name);
+        $this->assertCount(6, $order->items);
+        $this->assertSame('pending', $order->status);
+    }
 }
+
